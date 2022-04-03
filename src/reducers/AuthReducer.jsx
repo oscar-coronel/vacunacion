@@ -7,9 +7,17 @@ const initAuthReducer = {
 
 export const AuthReducer = ( state = initAuthReducer, action ) => {
 
+    const { type, payload } = action
+    
     const { login } = types
 
-    switch ( login ) {
+    switch ( type ) {
+        case login:
+            return {
+                ...state,
+                ...payload
+            }
+
         default: 
             return state
     }

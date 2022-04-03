@@ -4,6 +4,8 @@ import {
     Route
 } from 'react-router-dom'
 
+import { prefixes } from './routes'
+
 import { PrivateRouter } from './PrivateRouter'
 import { PublicRouter } from './PublicRouter'
 
@@ -15,19 +17,22 @@ import { PageNotFound } from '../components/errors/PageNotFound'
 import { Root } from '../components/root/Root'
 
 export const AppRouter = () => {
+
+    const { auth, guest } = prefixes
+
     return <>
         <Router>
             <Routes>
 
                 <Route path="/" element={ <Root /> } />
 
-                <Route path="/auth/*" element={ 
+                <Route path={ `${ guest }*` } element={ 
                     <PublicRouter>
                         <PublicRoutes />
                     </PublicRouter>
                  } />
 
-                <Route path="/main/*" element={ 
+                <Route path={ `${ auth }*` } element={ 
                     <PrivateRouter>
                         <PrivateRoutes />
                     </PrivateRouter>
