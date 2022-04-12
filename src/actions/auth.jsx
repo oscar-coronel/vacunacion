@@ -7,9 +7,11 @@ import Swal from 'sweetalert2'
 
 import { types } from "../types/types"
 import { auth } from "../firebase/config"
+import { auth as authSecondary } from "../firebase/secondaryConfig"
 
 import { onStartLoading, onFinishLoading } from './ui';
 import { loadUser } from "../helpers/loadUsers";
+import { activeUser } from "./users"
 
 
 // MIDDLEWARES
@@ -44,21 +46,25 @@ export const signInWithEmailAndPassword = (email, password) => {
     }
 }
 
-export const signUpWithEmailAndPassword = (email, password, name = '') => {
+export const signUpWithEmailAndPassword = (email, password, newUser) => {
     return ( dispatch ) => {
-        createUserWithEmailAndPassword(auth, email, password)
+        createUserWithEmailAndPassword(authSecondary, email, password)
             .then(async (userCredential) => {
                 // Signed in
-                /*const user = userCredential.user
+                signOut(authSecondary)
+                const user = userCredential.user
 
-                await updateProfile(user, {
+                /*await updateProfile(user, {
                     displayName: name
                 }).catch((error) => {
                     console.log(error.message)
-                })
+                })*/
 
-                const { uid, displayName } = user
-                dispatch( login( uid, displayName ) )*/
+                newUser['role'] = 'empleado'
+                const { uid } = user
+                dispatch( activeUser(uid, newUser) )
+
+                //dispatch( login( uid, displayName ) )
             })
             .catch((error) => {
                 //const errorCode = error.code

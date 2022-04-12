@@ -9,25 +9,12 @@ import { db } from './../firebase/config'
 
 // Middlewares
 
-export const addUserMiddleware = ( data ) => {
-    return async ( dispatch, getState ) => {
-
-        const globalState = getState()
-        const { uid } = globalState.auth
-        
-        const newUser = {
-            cedula: '',
-            nombres: '',
-            apellidos: '',
-            role: 'admin',
-            email: ''
-        }
-
-        const docRef = await addDoc(collection(db, 'vacunacion', 'users', `${ uid }`), newUser)
-        console.log(docRef)
-
+export const addUserMiddleware = ( uid, newUser ) => {
+    return async ( dispatch ) => {
+        delete newUser['id']
+        const docRef = await setDoc(doc(db, 'users', `${ uid.toString() }`), newUser);
+        console.log('hola mundo');
         dispatch( addNewUser( { 'id': docRef.id, ...newUser } ) )
-
     }
 }
 

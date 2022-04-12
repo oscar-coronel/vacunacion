@@ -10,6 +10,7 @@ const prefixes = {
 
 const private_routes = {
     'home_index': 'home',
+    'user_datos': 'user/datos',
 }
 
 const public_routes = {
