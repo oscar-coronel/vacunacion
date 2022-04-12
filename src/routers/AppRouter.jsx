@@ -1,7 +1,8 @@
 import {
     BrowserRouter as Router,
     Routes,
-    Route
+    Route,
+    Navigate
 } from 'react-router-dom'
 
 import { prefixes } from './routes'
@@ -13,9 +14,6 @@ import { PrivateRoutes } from './PrivateRoutes'
 import { PublicRoutes } from './PublicRoutes'
 
 
-import { PageNotFound } from '../components/errors/PageNotFound'
-import { Root } from '../components/root/Root'
-
 export const AppRouter = () => {
 
     const { auth, guest } = prefixes
@@ -23,9 +21,7 @@ export const AppRouter = () => {
     return <>
         <Router>
             <Routes>
-
-                <Route path="/" element={ <Root /> } />
-
+                
                 <Route path={ `${ guest }*` } element={ 
                     <PublicRouter>
                         <PublicRoutes />
@@ -38,7 +34,7 @@ export const AppRouter = () => {
                     </PrivateRouter>
                 } />
                 
-                <Route path="*" element={ <PageNotFound /> } />
+                <Route path="*" element={ <Navigate to="/auth/login" /> } />
 
             </Routes>
         </Router>

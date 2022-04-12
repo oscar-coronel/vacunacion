@@ -3,22 +3,17 @@ import { useSelector } from "react-redux"
 
 
 import { routes } from "./routes"
-import { LoadingPage } from "../components/loading/LoadingPage"
 
 
 export const PublicRouter = ({ children }) => {
 
     const { 
-        auth: { token },
-        loading: { verifyUserLogged } 
+        auth: { uid },
     } = useSelector( state => state )
 
     const { home_index } = routes
 
-    if( verifyUserLogged )
-        return <LoadingPage />
-
-    return token === null ? 
+    return !uid ? 
         children :
         <Navigate to={ home_index } />
 }

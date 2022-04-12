@@ -2,6 +2,7 @@ import React from 'react'
 import * as ReactDOMClient from 'react-dom/client'
 
 import 'bootstrap/dist/css/bootstrap.css'
+import './styles/general.css'
 
 
 import { MainApp } from './MainApp'

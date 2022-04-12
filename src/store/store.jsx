@@ -7,14 +7,16 @@ import {
 import thunk from 'redux-thunk'
 
 import { AuthReducer } from '../reducers/AuthReducer'
-import { LoadingReducer } from '../reducers/LoadingReducer'
+import { uiReducer } from '../reducers/uiReducer'
+import { UsersReducer } from '../reducers/UserReducer'
 
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
 const reducers = combineReducers({
     auth: AuthReducer,
-    loading: LoadingReducer,
+    users: UsersReducer,
+    ui: uiReducer,
 })
 
 export const store = createStore(
