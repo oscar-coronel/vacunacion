@@ -1,17 +1,16 @@
 import { 
-    createUserWithEmailAndPassword,
     signInWithEmailAndPassword as SignInWithEmailAndPassword,
-    signOut
+    signOut,
+    deleteUser
 } from "firebase/auth"
 import Swal from 'sweetalert2'
 
 import { types } from "../types/types"
 import { auth } from "../firebase/config"
-import { auth as authSecondary } from "../firebase/secondaryConfig"
+
 
 import { onStartLoading, onFinishLoading } from './ui';
 import { loadUser } from "../helpers/loadUsers";
-import { activeUser } from "./users"
 
 
 // MIDDLEWARES
@@ -46,6 +45,7 @@ export const signInWithEmailAndPassword = (email, password) => {
     }
 }
 
+/*
 export const signUpWithEmailAndPassword = (email, password, newUser) => {
     return ( dispatch ) => {
         createUserWithEmailAndPassword(authSecondary, email, password)
@@ -58,7 +58,7 @@ export const signUpWithEmailAndPassword = (email, password, newUser) => {
                     displayName: name
                 }).catch((error) => {
                     console.log(error.message)
-                })*/
+                })
 
                 newUser['role'] = 'empleado'
                 const { uid } = user
@@ -77,7 +77,7 @@ export const signUpWithEmailAndPassword = (email, password, newUser) => {
                 })
             })
     }
-}
+}*/
 
 export const startLogout = () => {
     return ( dispatch ) => {

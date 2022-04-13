@@ -4,13 +4,15 @@ import { useForm } from "../../hooks/useForm"
 
 import validator from 'validator'
 import Swal from 'sweetalert2'
-import { signUpWithEmailAndPassword } from "../../actions/auth"
-import { addUserMiddleware } from "../../actions/users"
+import { signUpUser } from "../../helpers/signUpUser"
+import { activeUser, addUserMiddleware, editUserMiddleware } from "../../actions/users"
+import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 
 export const UserFormPage = () => {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const { active: user } = useSelector( state => state.users )
 
@@ -21,19 +23,17 @@ export const UserFormPage = () => {
         email: '',
     }
 
-    const { id: user_id } = userData
-
-    useEffect( () => {
-        console.log(user_id);
-        if( !!user_id )
-            dispatch( addUserMiddleware( user_id, { ...userData } ) )
-    }, [ user_id ])
-
-    const [ newUser, handleInputChange, reset ] = useForm( userData )
+    const [ newUser, handleInputChange ] = useForm( userData )
 
     const { id, cedula, nombres, apellidos, email } = newUser
-    
-    const handleSubmit = (e) => {
+
+
+    useEffect( () => {
+        if( !!id )
+            dispatch( activeUser( id, { ...newUser } ) )
+    }, [cedula, nombres, apellidos, email] )
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
         console.log(id);
         console.log('form')
@@ -70,14 +70,24 @@ export const UserFormPage = () => {
             })
         } else {
             if( !id ){ // CREATE USER AND EMPLOYEE
-                dispatch( signUpWithEmailAndPassword(email, '123456', newUser) )
+                //dispatch( signUpWithEmailAndPassword(email, '123456', newUser) )
+                const uid = await signUpUser(email, '123456')
+                dispatch( addUserMiddleware( uid, { ...newUser } ) )
                 Swal.fire({
                     icon: 'info',
-                    text: 'Usuario: '+email+'; Contraseña: '+'123456'
+                    text: `Usuario: ${ email }; Contraseña: 123456`
                 })
+            } else {
+                dispatch( editUserMiddleware() )
             }
         }
 
+    }
+
+    const handleReturn = () => {
+        navigate('/main/home',{
+            replace: true
+        })
     }
 
     return (
@@ -133,6 +143,14 @@ export const UserFormPage = () => {
                             className="btn btn-primary btn-sm w-100"
                         >
                             Guardar
+                        </button>
+
+                        <button
+                            type="button"
+                            className="btn btn-link btn-sm w-100"
+                            onClick={ handleReturn }
+                        >
+                            Regresar
                         </button>
                     </form>
                 </div>

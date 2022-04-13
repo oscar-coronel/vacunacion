@@ -1,4 +1,9 @@
-import { collection, addDoc, doc, setDoc, deleteDoc } from "firebase/firestore"
+import { 
+    deleteUser as deleteUserAuth
+} from "firebase/auth"
+import { doc, setDoc, deleteDoc } from "firebase/firestore"
+import { auth } from "../firebase/config"
+
 import Swal from "sweetalert2"
 
 import { loadUsers } from "../helpers/loadUsers"
@@ -11,10 +16,14 @@ import { db } from './../firebase/config'
 
 export const addUserMiddleware = ( uid, newUser ) => {
     return async ( dispatch ) => {
+        newUser['role'] = 'empleado' 
+        const newUserOrigin = { ...newUser }
+
         delete newUser['id']
-        const docRef = await setDoc(doc(db, 'users', `${ uid.toString() }`), newUser);
-        console.log('hola mundo');
-        dispatch( addNewUser( { 'id': docRef.id, ...newUser } ) )
+        await setDoc(doc(db, 'users', `${ uid.toString() }`), newUser);
+
+        dispatch( addNewUser( { 'id': uid, ...newUser } ) )
+        dispatch( activeUser( uid, { ...newUserOrigin }) )
     }
 }
 
@@ -32,7 +41,6 @@ export const editUserMiddleware = () => {
     return async ( dispatch, getState ) => {
 
         const {
-            auth: { uid }, 
             users: { active: user } 
         } = getState()
 
@@ -41,7 +49,7 @@ export const editUserMiddleware = () => {
         const { id: user_id } = userCopy
         delete userCopy['id']
 
-        await setDoc(doc(db, `${ uid }`, 'journal', 'notes', `${ user_id }`), {
+        await setDoc(doc(db, 'users', `${ user_id }`), {
             ...userCopy
         })
 
@@ -57,12 +65,10 @@ export const editUserMiddleware = () => {
 export const deleteUserMiddleware = () => {
     return async ( dispatch, getState ) => {
 
-        const { uid } = getState().auth
         const { active: user } = getState().users
 
-        await deleteDoc(doc(db, `${ uid }`, 'journal', 'notes', `${ user.id }`))
+        await deleteDoc(doc(db, 'users', `${ user.id }`))
         dispatch( deleteUser( user.id ) )
-
     }
 }
 

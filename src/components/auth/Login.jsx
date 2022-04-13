@@ -26,10 +26,10 @@ export const Login = () => {
     }
 
     return <>
-        <div className="container-fluid">
+        <div className="container-fluid bg-secondary main d-flex flex-column justify-content-center">
             <div className="row">
-                <div className="col-4 mx-auto">
-                    <h3 className="mb-4 text-center">
+                <div className="col-3 mx-auto bg-dark py-3 rounded">
+                    <h3 className="mb-4 text-center text-white">
                         Login
                     </h3>
 
@@ -59,7 +59,7 @@ export const Login = () => {
 
                         <button
                             type="submit"
-                            className="btn btn-primary btn-sm btn-block"
+                            className="btn btn-primary btn-sm btn-block w-100"
                             disabled={ loading }
                         >
                             Login

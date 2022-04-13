@@ -1,4 +1,6 @@
 import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
 
 import { activeUser, deleteUserMiddleware } from "../../actions/users"
 
@@ -13,13 +15,28 @@ export const EmpleadoEntry = ({
 }) => {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handleActiveUser = () => {
         dispatch( activeUser( id, user ) )
+        navigate('/main/user/datos', {
+            replace: true
+        })
     }
 
     const handleDeleteUser = () => {
-        dispatch( deleteUserMiddleware( id, user ) )
+        Swal.fire({
+            icon: 'question',
+            text: '¿Está seguro?',
+            showCancelButton: true,
+            cancelButtonText: 'No',
+            confirmButtonText: 'Si'
+        }).then( result => {
+            if (result.value ){
+                dispatch( activeUser( id, user ) )
+                dispatch( deleteUserMiddleware() )
+            }
+        })
     }
 
     return (
@@ -48,7 +65,7 @@ export const EmpleadoEntry = ({
                     className="btn btn-danger btn-sm"
                     onClick={ handleDeleteUser }
                 >
-                    Editar
+                    Eliminar
                 </button>
             </td>
         </tr>
